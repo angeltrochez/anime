@@ -4,7 +4,10 @@ import {MainController} from "./controllers/main.controller";
 import {ClientController} from "./controllers/client.controllers";
 import {StaffController} from "./controllers/staff.controllers";
 import {MemberController} from "./controllers/member.controllers";
-import {SolNoticiaController} from "./controllers/sol_noticia.controllers"
+import {SolNoticiaController} from "./controllers/sol_noticia.controllers";
+import {AnimeController} from "./controllers/anime.controllers";
+import {EpisodioController} from "./controllers/episodio.controllers";
+import {GeneroController} from "./controllers/genero.controllers";
 
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -21,10 +24,12 @@ class App{
     public staffController: StaffController;
     public memberController: MemberController;
     public solNoticiaController: SolNoticiaController;
+    public animeController: AnimeController;
+    public episodioController: EpisodioController;
+    public generoController: GeneroController;
 
     constructor(){        
         this.app = express();
-        
         this.setConfig();
         this.setMongoDBConfig();
         this.mainController = new MainController(this.app);        
@@ -32,6 +37,9 @@ class App{
         this.staffController = new StaffController(this.app);
         this.memberController = new MemberController(this.app);
         this.solNoticiaController = new SolNoticiaController(this.app);
+        this.animeController = new AnimeController(this.app);
+        this.episodioController = new EpisodioController(this.app);
+        this.generoController = new GeneroController(this.app);
     }
     private setConfig(){
         this.app.use(bodyParser.json({limit:"50mb"}));
