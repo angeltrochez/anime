@@ -10,8 +10,8 @@ export class MemberController{
     private routes(){
        //Staff
         this.app.route("/members/").get(this.member_service.getMember);
-        this.app.route("/members").post(this.member_service.NewMember);
-        this.app.route("/members/:id_staff")
+        this.app.route("/member/").post(this.member_service.NewMember);
+        this.app.route("/member/:id_staff")
         .get(this.member_service.GetMemberById)
         .put(this.member_service.UpdateMember)
         .delete(this.member_service.DeleteMember);

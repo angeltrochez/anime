@@ -9,7 +9,7 @@ export class AnimeController{
     }
     private routes(){
        //Anime
-        this.app.route("/anime/").get(this.anime_service.getAnime);
+        this.app.route("/animes/").get(this.anime_service.getAnime);
         this.app.route("/anime").post(this.anime_service.NewAnime);
         this.app.route("/anime/:id_anime")
         .get(this.anime_service.GetAnimeById)
