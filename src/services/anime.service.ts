@@ -7,9 +7,9 @@ import { resolve } from "dns";
 
 class AnimeHelpers{
 
-    GetStaff(id_anime: string):Promise<IAnime>{        
+    GetAnime(filter: any):Promise<IAnime>{        
         return new Promise<IAnime>( (resolve) => {
-            Anime.findById(id_anime,(err:Error,anime:IAnime)=>{
+            Anime.findById(filter,(err:Error,anime:IAnime)=>{
                 if(err){
                     console.log(err);
                 }
@@ -21,7 +21,7 @@ class AnimeHelpers{
 
 export class AnimeService extends AnimeHelpers{
 
-    //FUNCIONES CRUD Staff
+    //FUNCIONES CRUD ANIME
     public getAnime(req: Request,res: Response){
         Anime.find({},(err: Error, anime: MongooseDocument)=>{
             if(err){
@@ -32,36 +32,59 @@ export class AnimeService extends AnimeHelpers{
     }   
 
     public async GetAnimeById(req: Request,res: Response){        
-        const my_anime = await super.GetStaff(req.params.id_anime);
-        res.status(200).send(my_anime);
+        const anime:any = await super.GetAnime(req.params.id_anime);
+        res.status(200).json(anime);
     }
 
     //Payload
-    public UpdateAnime(req: Request,res: Response){
-        Anime.findByIdAndUpdate(req.params.id_anime,req.body,(err:Error, anime:any)=>{
+    public async UpdateAnime(req: Request,res: Response){
+        const old_anime:any = await super.GetAnime({
+            name:req.body.name,
+            id_anime: { $nin: [req.params.id] }
+        });
+        if(old_anime.length === 0){
+        Anime.findByIdAndUpdate(req.params.id_anime,req.body,(err:Error)=>{
             if(err){
-                res.status(401).send(err);
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Anime updated successfully"});
             }
-            res.status(200).json( anime? {"updated":true} : {"updated":false} );
-        })
+        });
+        }else{
+            res.status(200).json({successed:false});
+        }
     }
 
     public async DeleteAnime(req: Request, res: Response){   
+        const old_anime:any = await super.GetAnime({
+            id_anime: { $nin: [req.params.id] }
+        });
+        if(old_anime.length != 0){
         Anime.findByIdAndDelete(req.params.id_anime,req.body,(err:Error, anime:any)=>{
                 if(err){
-                    res.status(401).send(err);
+                    res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
                 }
                 res.status(200).json( anime? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
-            });    
+            });   
+        } 
     }
 
-    public NewAnime(req: Request, res: Response){
+    public async NewAnime(req: Request, res: Response){
         const s = new Anime(req.body);
-        s.save((err:Error, anime: IAnime)=>{
-            if(err){
-                res.status(401).send(err);
-            }
-            res.status(200).json( anime? {"successed":true, "Anime": anime } : {"successed":false} );
-        });
+        const old_lan:any = await super.GetAnime({name:s.name});
+
+        console.log(s);
+        console.log(req.body);
+        if( old_lan.length === 0 ){
+            await s.save((err:Error, anime: IAnime)=>{
+                if(err){
+                    res.status(401).send(err);
+                }else{
+                    res.status(200).json( anime? {successed:true, anime: Anime } : {successed:false} );
+                }            
+            });
+        }else{
+            res.status(200).json({successed:false});
+        }
     } 
 }

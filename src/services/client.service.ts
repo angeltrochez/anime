@@ -22,16 +22,6 @@ class ClientHelpers{
         });
     }
 
-    NumberOfClientsPremBySupplier(client: IClient):Promise<number>{        
-        return new Promise<number>( resolve => {
-            Client.aggregate([
-                { "$match": { "proveedor": client._id }}                
-              ],(err:Error, data:any)=>{
-                resolve(data.length);
-              }) 
-        });
-    }
-
     GetClientFree(id_client: string):Promise<IClientF>{        
         return new Promise<IClientF>( (resolve) => {
             ClientF.findById(id_client,(err:Error,client:IClientF)=>{

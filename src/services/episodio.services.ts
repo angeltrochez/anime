@@ -7,9 +7,9 @@ import { resolve } from "dns";
 
 class EpisodioHelpers{
 
-    GetEpisodio(id_episodio: string):Promise<IEpisodio>{        
+    GetEpisodio(filter: any):Promise<IEpisodio>{        
         return new Promise<IEpisodio>( (resolve) => {
-            Episodio.findById(id_episodio,(err:Error,episodio:IEpisodio)=>{
+            Episodio.findById(filter,(err:Error,episodio:IEpisodio)=>{
                 if(err){
                     console.log(err);
                 }
@@ -37,31 +37,50 @@ export class EpisodioService extends EpisodioHelpers{
     }
 
     //Payload
-    public UpdateEpisodio(req: Request,res: Response){
-        Episodio.findByIdAndUpdate(req.params.id_episodio,req.body,(err:Error, episodio:any)=>{
+    public async UpdateEpisodio(req: Request,res: Response){
+        const old_episodio:any = await super.GetEpisodio({
+            name:req.body.name,
+            id_episodio: { $nin: [req.params.id] }
+        });
+        if(old_episodio.length === 0){
+        Episodio.findByIdAndUpdate(req.params.id_episodio,req.body,(err:Error)=>{
             if(err){
-                res.status(401).send(err);
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Anime updated successfully"});
             }
-            res.status(200).json( episodio? {"updated":true} : {"updated":false} );
-        })
+        });
+        }else{
+            res.status(200).json({successed:false});
+        }
     }
 
     public async DeleteEpisodio(req: Request, res: Response){   
+        const old_episodio:any = await super.GetEpisodio({
+            id_episodio: { $nin: [req.params.id] }
+        });
+        if(old_episodio.length != 0){
         Episodio.findByIdAndDelete(req.params.id_episodio,req.body,(err:Error, episodio:any)=>{
-                if(err){
-                    res.status(401).send(err);
-                }
-                res.status(200).json( episodio? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
-            });    
+            if(err){
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }
+            res.status(200).json( episodio? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
+        });
+      }
     }
 
-    public NewEpisodio(req: Request, res: Response){
-        const e = new Episodio(req.body);
-        e.save((err:Error, episodio: IEpisodio)=>{
+    public async NewEpisodio(req: Request, res: Response){
+        const epi = new Episodio(req.body);
+        const old_episodio:any = await super.GetEpisodio({name:epi.name});
+        if( old_episodio.length === 0 ){
+        await epi.save((err:Error, episodio: IEpisodio)=>{
             if(err){
                 res.status(401).send(err);
             }
             res.status(200).json( episodio? {"successed":true, "Episodio": episodio } : {"successed":false} );
         });
+        }else{
+        res.status(200).json({successed:false});
+        }
     } 
 }

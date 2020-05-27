@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
-import { Stream } from "stream";
+import {IAnime} from "./anime.model";
+import {IStaff} from "./staff.model";
 
 export interface IEpisodio extends mongoose.Document {
     name: String;
     numero: Number;
     duracion: String;
     archivo: String;
-    anime:String;
-    staff:String;
+    anime:IAnime;
+    staff:IStaff;
 }
 
 const EpisodioSchema = new mongoose.Schema({
@@ -16,8 +17,8 @@ const EpisodioSchema = new mongoose.Schema({
     numero: { type: Number, required: true },
     duracion: {type: String, required: true },
     archivo: {type: String, required:true},
-    anime: {type:String, required:true},
-    staff: {type:String, required:true}
+    anime: {type: mongoose.Schema.Types.ObjectId, ref:"Anime"} ,
+    staff: {type: mongoose.Schema.Types.ObjectId, ref:"Staff"} 
 });
 
 export const Episodio = mongoose.model<IEpisodio>("Episodio", EpisodioSchema);
