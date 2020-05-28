@@ -9,7 +9,7 @@ class EpisodioHelpers{
 
     GetEpisodio(filter: any):Promise<IEpisodio>{        
         return new Promise<IEpisodio>( (resolve) => {
-            Episodio.findById(filter,(err:Error,episodio:IEpisodio)=>{
+            Episodio.find(filter,(err:Error,episodio:IEpisodio)=>{
                 if(err){
                     console.log(err);
                 }
@@ -59,7 +59,7 @@ export class EpisodioService extends EpisodioHelpers{
         const old_episodio:any = await super.GetEpisodio({
             id_episodio: { $nin: [req.params.id] }
         });
-        if(old_episodio.length != 0){
+        if(old_episodio.length === 0){
         Episodio.findByIdAndDelete(req.params.id_episodio,req.body,(err:Error, episodio:any)=>{
             if(err){
                 res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
@@ -77,7 +77,7 @@ export class EpisodioService extends EpisodioHelpers{
             if(err){
                 res.status(401).send(err);
             }
-            res.status(200).json( episodio? {"successed":true, "Episodio": episodio } : {"successed":false} );
+            res.status(200).json( episodio? {successed:true, episodio: episodio } : {successed:false} );
         });
         }else{
         res.status(200).json({successed:false});

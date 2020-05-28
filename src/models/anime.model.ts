@@ -11,10 +11,9 @@ export interface IAnime extends mongoose.Document {
 }
 
 const AnimeSchema = new mongoose.Schema({
-    _id: {type:String, required:true},
     name: { type: String, required: true },
     estado: { type: String, required: true },
-    genero:{type: mongoose.Schema.Types.ObjectId, ref:"Genero"},
+    genero:{type: mongoose.Schema.Types.ObjectId, ref:"generos"},
     descripcion: {type: String, required:true},
     tipoMiembro: {type:String, required:true}
 });

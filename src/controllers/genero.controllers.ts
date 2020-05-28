@@ -8,10 +8,10 @@ export class GeneroController{
         this.routes();
     }
     private routes(){
-       //Episodio
-        this.app.route("/anime/generos").get(this.genero_service.getGenero);
-        this.app.route("/anime/genero").post(this.genero_service.NewGenero);
-        this.app.route("/anime/:id_genero")
+       //Genero
+        this.app.route("/generos").get(this.genero_service.getGenero);
+        this.app.route("/genero").post(this.genero_service.NewGenero);
+        this.app.route("/genero/:id_genero")
         .get(this.genero_service.GetGeneroById)
         .put(this.genero_service.UpdateGenero)
         .delete(this.genero_service.DeleteGenero);

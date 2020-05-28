@@ -8,7 +8,6 @@ export interface ISolNoticia extends mongoose.Document {
 }
 
 const SolNoticiaSchema = new mongoose.Schema({
-    _id: {type:String, required:true},
     name: { type: String, required: true },
     url: { type: String, required: true },
     fecha: {type: Date, required:true}

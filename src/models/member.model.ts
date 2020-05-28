@@ -10,7 +10,6 @@ export interface IMember extends mongoose.Document {
 }
 
 const MemberSchema = new mongoose.Schema({
-    _id: {type:String, required:true},
     name: { type: String, required: true },
     usuario: { type: String, required: true },
     contrasena: { type: String, required: true },

@@ -10,7 +10,6 @@ export interface IClient extends mongoose.Document {
 }
 
 const ClientSchema = new mongoose.Schema({
-    _id: {type:String, required:true},
     nickname: { type: String, required: true },
     contrasena: {type: String, required: true},
     tarjeta: { type: String, required: true },

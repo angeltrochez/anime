@@ -6,7 +6,6 @@ export interface IClientF extends mongoose.Document {
 }
 
 const ClientFSchema = new mongoose.Schema({
-    _id: {type:String, required:true},
     nickname: { type: String, required: true },
     contrasena: {type: String, required: true}   
 });
