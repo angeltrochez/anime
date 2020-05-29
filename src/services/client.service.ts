@@ -32,17 +32,6 @@ class ClientHelpers{
             }); 
         });
     }
-
-    NumberOfClientsFreeBySupplier(client: IClientF):Promise<number>{        
-        return new Promise<number>( resolve => {
-            ClientF.aggregate([
-                { "$match": { "proveedor": client._id }}                
-              ],(err:Error, data:any)=>{
-                resolve(data.length);
-              }) 
-        });
-    }
-
 }
 
 export class ClientService extends ClientHelpers{

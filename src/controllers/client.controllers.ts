@@ -12,7 +12,7 @@ export class ClientController{
         this.app.route("/clients/prem").get(this.client_service.getClientPrem);
         this.app.route("/clients/prem").post(this.client_service.NewClientPrem);
         this.app.route("/clients/prem/:id_client")
-        .get(this.client_service.GetClientPremById)
+        .get(this.client_service.getClientPrem)
         .put(this.client_service.UpdateClientPrem)
         .delete(this.client_service.DeleteClientPrem);
 
@@ -20,7 +20,7 @@ export class ClientController{
         this.app.route("/clients/free").get(this.client_service.getClientFree);
         this.app.route("/clients/free").post(this.client_service.NewClientFree);
         this.app.route("/clients/free/:id_client")
-        .get(this.client_service.GetClientFreeById)
+        .get(this.client_service.getClientFree)
         .put(this.client_service.UpdateClientFree)
         .delete(this.client_service.DeleteClientFree);
     }

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import {IEpisodio} from "./episodio.model";
 import {IGenero} from "./genero.model";
 
 export interface IAnime extends mongoose.Document {

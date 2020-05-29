@@ -66,6 +66,8 @@ export class AnimeService extends AnimeHelpers{
                 }
                 res.status(200).json( anime? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
             });   
+        }else{
+            res.status(200).json({successed:false});
         } 
     }
 

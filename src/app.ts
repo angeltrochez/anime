@@ -3,8 +3,6 @@ import express,{Application} from "express";
 import {MainController} from "./controllers/main.controller";
 import {ClientController} from "./controllers/client.controllers";
 import {StaffController} from "./controllers/staff.controllers";
-import {MemberController} from "./controllers/member.controllers";
-import {SolNoticiaController} from "./controllers/sol_noticia.controllers";
 import {AnimeController} from "./controllers/anime.controllers";
 import {EpisodioController} from "./controllers/episodio.controllers";
 import {GeneroController} from "./controllers/genero.controllers";
@@ -22,8 +20,6 @@ class App{
     public mainController: MainController;
     public clientController: ClientController;
     public staffController: StaffController;
-    public memberController: MemberController;
-    public solNoticiaController: SolNoticiaController;
     public animeController: AnimeController;
     public episodioController: EpisodioController;
     public generoController: GeneroController;
@@ -35,8 +31,6 @@ class App{
         this.mainController = new MainController(this.app);        
         this.clientController = new ClientController(this.app);
         this.staffController = new StaffController(this.app);
-        this.memberController = new MemberController(this.app);
-        this.solNoticiaController = new SolNoticiaController(this.app);
         this.animeController = new AnimeController(this.app);
         this.episodioController = new EpisodioController(this.app);
         this.generoController = new GeneroController(this.app);

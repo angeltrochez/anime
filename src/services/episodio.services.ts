@@ -66,7 +66,9 @@ export class EpisodioService extends EpisodioHelpers{
             }
             res.status(200).json( episodio? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
         });
-      }
+        }else{
+         res.status(200).json({successed:false});
+        }
     }
 
     public async NewEpisodio(req: Request, res: Response){

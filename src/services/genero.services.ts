@@ -7,9 +7,9 @@ import { resolve } from "dns";
 
 class GeneroHelpers{
 
-    GetGenero(id_genero: string):Promise<IGenero>{        
+    GetGenero(filter: any):Promise<IGenero>{        
         return new Promise<IGenero>( (resolve) => {
-            Genero.findById(id_genero,(err:Error,genero:IGenero)=>{
+            Genero.find(filter,(err:Error,genero:IGenero)=>{
                 if(err){
                     console.log(err);
                 }
@@ -21,7 +21,7 @@ class GeneroHelpers{
 
 export class GeneroService extends GeneroHelpers{
 
-    //FUNCIONES CRUD Staff
+    //FUNCIONES CRUD Genero
     public getGenero(req: Request,res: Response){
         Genero.find({},(err: Error, genero: MongooseDocument)=>{
             if(err){
@@ -37,31 +37,52 @@ export class GeneroService extends GeneroHelpers{
     }
 
     //Payload
-    public UpdateGenero(req: Request,res: Response){
-        Genero.findByIdAndUpdate(req.params.id_genero,req.body,(err:Error, genero:any)=>{
+    public async UpdateGenero(req: Request,res: Response){
+        const old_genero:any = await super.GetGenero({
+            name:req.body.name,
+            id_genero: { $nin: [req.params.id] }
+        });
+        if(old_genero.length === 0){
+        Genero.findByIdAndUpdate(req.params.id_genero,req.body,(err:Error)=>{
             if(err){
-                res.status(401).send(err);
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Genero updated successfully"});
             }
-            res.status(200).json( genero? {"updated":true} : {"updated":false} );
-        })
+        });
+        }else{
+            res.status(200).json({successed:false});
+        } 
     }
 
     public async DeleteGenero(req: Request, res: Response){   
+        const old_genero:any = await super.GetGenero({
+            id_genero: { $nin: [req.params.id] }
+        });
+        if(old_genero.length === 0){
         Genero.findByIdAndDelete(req.params.id_genero,req.body,(err:Error, genero:any)=>{
-                if(err){
-                    res.status(401).send(err);
-                }
-                res.status(200).json( genero? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
-            });    
+            if(err){
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }
+            res.status(200).json( genero? {"deleted":true, "message":"Eliminado sin error"} : {"deleted":false,"message":"Un error ocurrio con el server, vuela a intentar"} );
+        });
+        }else{
+         res.status(200).json({successed:false});
+        }    
     }
 
-    public NewGenero(req: Request, res: Response){
-        const e = new Genero(req.body);
-        e.save((err:Error, genero: IGenero)=>{
+    public async NewGenero(req: Request, res: Response){
+        const gen = new Genero(req.body);
+        const old_genero:any = await super.GetGenero({name:gen.name});
+        if( old_genero.length === 0 ){
+        await gen.save((err:Error, genero: IGenero)=>{
             if(err){
                 res.status(401).send(err);
             }
-            res.status(200).json( genero? {"successed":true, "Genero": genero } : {"successed":false} );
+            res.status(200).json( genero? {successed:true, genero: genero } : {successed:false} );
         });
+        }else{
+            res.status(200).json({successed:false});
+        } 
     } 
 }
